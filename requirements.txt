@@ -1,0 +1,17 @@
+# Manipulation des données
+pandas>=2.0
+numpy>=1.24
+scipy>=1.10
+
+# Machine Learning
+scikit-learn>=1.3
+
+# Graphiques
+matplotlib>=3.7
+seaborn>=0.13
+
+# Notebooks
+jupyter
+
+# Tests
+pytest>=7.0
