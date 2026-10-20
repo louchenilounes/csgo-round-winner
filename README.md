@@ -10,7 +10,7 @@ Prédire la probabilité de victoire d'une équipe (Terroristes ou Anti-terroris
 | --- | --- | --- |
 | 0 | Organisation du projet | Terminé |
 | 1 | Chargement propre des données | Terminé |
-| 2 | Analyse exploratoire | À faire |
+| 2 | Analyse exploratoire | Terminé |
 | 3 | Reconstruction des rounds et correction de la fuite de données | À faire |
 | 4 | Feature engineering | À faire |
 | 5 | Baselines | À faire |
@@ -33,10 +33,14 @@ csgo-round-winner/
 ├── models/               # modèles entraînés (non versionnés)
 ├── notebooks/            # notebooks d'analyse
 │   ├── 00_notebook_initial.ipynb   # première version du projet
-│   └── 01_chargement_donnees.ipynb # étape 1 : chargement et qualité
+│   ├── 01_chargement_donnees.ipynb # étape 1 : chargement et qualité
+│   └── 02_eda.ipynb                # étape 2 : analyse exploratoire
+├── reports/figures/      # graphiques produits par les notebooks
 ├── src/                  # code Python réutilisable
 │   ├── config.py         # chemins et graine aléatoire
-│   └── data.py           # téléchargement, lecture ARFF, types, contrôles
+│   ├── data.py           # téléchargement, lecture ARFF, types, contrôles
+│   ├── eda.py            # calculs de l'analyse exploratoire
+│   └── viz.py            # style et couleurs des graphiques
 ├── tests/                # tests automatiques
 ├── requirements.txt
 └── README.md
