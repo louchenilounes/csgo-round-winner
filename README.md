@@ -2,7 +2,7 @@
 
 Prédire la probabilité de victoire d'une équipe (Terroristes ou Anti-terroristes) à partir de l'état d'un round de CS:GO : joueurs vivants, santé, armure, argent, armes, bombe posée, temps restant.
 
-> Projet en cours d'amélioration. Ce README sera complété à chaque étape.
+> Projet en cours de développement.
 
 ## Avancement
 
