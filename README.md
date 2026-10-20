@@ -9,7 +9,7 @@ Prédire la probabilité de victoire d'une équipe (Terroristes ou Anti-terroris
 | Étape | Contenu | Statut |
 | --- | --- | --- |
 | 0 | Organisation du projet | Terminé |
-| 1 | Chargement propre des données | À faire |
+| 1 | Chargement propre des données | Terminé |
 | 2 | Analyse exploratoire | À faire |
 | 3 | Reconstruction des rounds et correction de la fuite de données | À faire |
 | 4 | Feature engineering | À faire |
@@ -32,9 +32,11 @@ csgo-round-winner/
 │   └── processed/        # données nettoyées (non versionnées)
 ├── models/               # modèles entraînés (non versionnés)
 ├── notebooks/            # notebooks d'analyse
-│   └── 00_notebook_initial.ipynb   # première version du projet
+│   ├── 00_notebook_initial.ipynb   # première version du projet
+│   └── 01_chargement_donnees.ipynb # étape 1 : chargement et qualité
 ├── src/                  # code Python réutilisable
-│   └── config.py         # chemins et graine aléatoire
+│   ├── config.py         # chemins et graine aléatoire
+│   └── data.py           # téléchargement, lecture ARFF, types, contrôles
 ├── tests/                # tests automatiques
 ├── requirements.txt
 └── README.md
@@ -52,6 +54,18 @@ python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 ```
+
+## Données
+
+Dataset **CS:GO Round Snapshots** (OpenML) : 122 410 photos d'état de round, prises environ toutes les 20 secondes pendant des matchs de haut niveau, 96 variables + le gagnant du round.
+
+Pour télécharger les données et afficher le rapport de qualité :
+
+```bash
+python -m src.data
+```
+
+Le fichier est téléchargé une seule fois dans `data/raw/`.
 
 ## Vérifier l'installation
 
