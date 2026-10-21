@@ -13,7 +13,7 @@ Prédire la probabilité de victoire d'une équipe (Terroristes ou Anti-terroris
 | 2 | Analyse exploratoire | Terminé |
 | 3 | Reconstruction des rounds et correction de la fuite de données | Terminé |
 | 4 | Feature engineering | Terminé |
-| 5 | Baselines | À faire |
+| 5 | Baselines | Terminé |
 | 6 | Modèles avancés | À faire |
 | 7 | Évaluation complète | À faire |
 | 8 | Interprétabilité (SHAP) | À faire |
@@ -36,9 +36,11 @@ csgo-round-winner/
 │   ├── 01_chargement_donnees.ipynb # chargement et qualité des données
 │   ├── 02_eda.ipynb                # analyse exploratoire
 │   ├── 03_rounds_et_fuite.ipynb    # rounds, matchs et fuite de données
-│   └── 04_feature_engineering.ipynb # création des variables
+│   ├── 04_feature_engineering.ipynb # création des variables
+│   └── 05_baselines.ipynb          # comparaison à des références simples
 ├── reports/              # graphiques et tableaux de résultats
 ├── src/                  # code Python réutilisable
+│   ├── baselines.py      # règles et modèles de référence
 │   ├── config.py         # chemins et graine aléatoire
 │   ├── data.py           # téléchargement, lecture ARFF, types, contrôles
 │   ├── eda.py            # calculs de l'analyse exploratoire
