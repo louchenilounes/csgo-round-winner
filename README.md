@@ -12,7 +12,7 @@ Prédire la probabilité de victoire d'une équipe (Terroristes ou Anti-terroris
 | 1 | Chargement propre des données | Terminé |
 | 2 | Analyse exploratoire | Terminé |
 | 3 | Reconstruction des rounds et correction de la fuite de données | Terminé |
-| 4 | Feature engineering | À faire |
+| 4 | Feature engineering | Terminé |
 | 5 | Baselines | À faire |
 | 6 | Modèles avancés | À faire |
 | 7 | Évaluation complète | À faire |
@@ -35,12 +35,15 @@ csgo-round-winner/
 │   ├── 00_notebook_initial.ipynb   # première version du projet
 │   ├── 01_chargement_donnees.ipynb # étape 1 : chargement et qualité
 │   ├── 02_eda.ipynb                # étape 2 : analyse exploratoire
-│   └── 03_rounds_et_fuite.ipynb    # étape 3 : rounds, matchs et fuite de données
-├── reports/figures/      # graphiques produits par les notebooks
+│   ├── 03_rounds_et_fuite.ipynb    # étape 3 : rounds, matchs et fuite de données
+│   └── 04_feature_engineering.ipynb # étape 4 : création des variables
+├── reports/              # graphiques et tableaux de résultats
 ├── src/                  # code Python réutilisable
 │   ├── config.py         # chemins et graine aléatoire
 │   ├── data.py           # téléchargement, lecture ARFF, types, contrôles
 │   ├── eda.py            # calculs de l'analyse exploratoire
+│   ├── evaluation.py     # validation croisée groupée et métriques
+│   ├── features.py       # création des variables et pipelines scikit-learn
 │   ├── rounds.py         # reconstruction des rounds/matchs, split train/test
 │   ├── leakage.py        # mesure de la fuite de données
 │   └── viz.py            # style et couleurs des graphiques
