@@ -17,7 +17,7 @@ Prédire la probabilité de victoire d'une équipe (Terroristes ou Anti-terroris
 | 6 | Modèles avancés | Terminé |
 | 7 | Évaluation complète | Terminé |
 | 8 | Interprétabilité (SHAP) | Terminé |
-| 9 | MLOps léger (MLflow) | À faire |
+| 9 | MLOps léger (MLflow) | Terminé |
 | 10 | Démo (FastAPI + Streamlit + Docker) | À faire |
 | 11 | Qualité du code (tests, CI) | À faire |
 | 12 | Présentation finale | À faire |
@@ -48,11 +48,13 @@ csgo-round-winner/
 │   ├── data.py           # téléchargement, lecture ARFF, types, contrôles
 │   ├── eda.py            # calculs de l'analyse exploratoire
 │   ├── evaluation.py     # validation croisée groupée et métriques
+│   ├── experiments.py    # relance des expériences et enregistrement dans MLflow
 │   ├── explain.py        # valeurs SHAP (TreeSHAP de LightGBM)
 │   ├── features.py       # création des variables et pipelines scikit-learn
 │   ├── final_eval.py     # bootstrap par match, calibration
 │   ├── rounds.py         # reconstruction des rounds/matchs, split train/test
 │   ├── train.py          # entraînement et sauvegarde du modèle final
+│   ├── tracking.py       # suivi MLflow (runs, Model Registry)
 │   ├── tuning.py         # optimisation des hyperparamètres (Optuna)
 │   ├── leakage.py        # mesure de la fuite de données
 │   └── viz.py            # style et couleurs des graphiques
@@ -91,6 +93,22 @@ Pour reconstruire les rounds et les matchs, puis créer le découpage train/test
 ```bash
 python -m src.rounds
 ```
+
+## Suivi des expériences (MLflow)
+
+Relancer les expériences principales et enregistrer le modèle final dans le Model Registry :
+
+```bash
+python -m src.experiments
+```
+
+Consulter les runs dans l'interface web de MLflow :
+
+```bash
+mlflow ui --backend-store-uri sqlite:///mlflow.db
+```
+
+puis ouvrir http://127.0.0.1:5000.
 
 ## Vérifier l'installation
 

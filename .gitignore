@@ -18,8 +18,10 @@ models/*
 !data/processed/.gitkeep
 !models/.gitkeep
 
-# Suivi des expériences (étape 9)
+# Suivi des expériences (MLflow)
 mlruns/
+mlartifacts/
+mlflow.db
 
 # Éditeurs et système
 .vscode/
