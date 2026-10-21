@@ -16,7 +16,7 @@ Prédire la probabilité de victoire d'une équipe (Terroristes ou Anti-terroris
 | 5 | Baselines | Terminé |
 | 6 | Modèles avancés | Terminé |
 | 7 | Évaluation complète | Terminé |
-| 8 | Interprétabilité (SHAP) | À faire |
+| 8 | Interprétabilité (SHAP) | Terminé |
 | 9 | MLOps léger (MLflow) | À faire |
 | 10 | Démo (FastAPI + Streamlit + Docker) | À faire |
 | 11 | Qualité du code (tests, CI) | À faire |
@@ -39,7 +39,8 @@ csgo-round-winner/
 │   ├── 04_feature_engineering.ipynb # création des variables
 │   ├── 05_baselines.ipynb          # comparaison à des références simples
 │   ├── 06_modeles_avances.ipynb    # comparaison des modèles, optimisation Optuna
-│   └── 07_evaluation_finale.ipynb  # évaluation sur le test, calibration
+│   ├── 07_evaluation_finale.ipynb  # évaluation sur le test, calibration
+│   └── 08_interpretation_shap.ipynb # interprétation du modèle (SHAP)
 ├── reports/              # graphiques et tableaux de résultats
 ├── src/                  # code Python réutilisable
 │   ├── baselines.py      # règles et modèles de référence
@@ -47,6 +48,7 @@ csgo-round-winner/
 │   ├── data.py           # téléchargement, lecture ARFF, types, contrôles
 │   ├── eda.py            # calculs de l'analyse exploratoire
 │   ├── evaluation.py     # validation croisée groupée et métriques
+│   ├── explain.py        # valeurs SHAP (TreeSHAP de LightGBM)
 │   ├── features.py       # création des variables et pipelines scikit-learn
 │   ├── final_eval.py     # bootstrap par match, calibration
 │   ├── rounds.py         # reconstruction des rounds/matchs, split train/test
