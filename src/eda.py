@@ -1,4 +1,4 @@
-"""Étape 2 : fonctions de calcul pour l'analyse exploratoire.
+"""Fonctions de calcul pour l'analyse exploratoire.
 
 Les calculs sont ici (testables), les graphiques sont dans le notebook.
 Toutes les fonctions renvoient le taux de victoire des Terroristes (t_win moyen)

@@ -19,7 +19,7 @@ RAW_DATA_DIR = DATA_DIR / "raw"
 PROCESSED_DATA_DIR = DATA_DIR / "processed"
 MODELS_DIR = ROOT_DIR / "models"
 
-# Fichier de données brutes (téléchargé à l'étape 1).
+# Fichier de données brutes (créé par src/data.py).
 RAW_DATA_PATH = RAW_DATA_DIR / "csgo_round_snapshots.csv"
 
 # Nom de la colonne cible : 1 si les Terroristes gagnent le round, 0 sinon.

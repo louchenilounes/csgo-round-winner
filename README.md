@@ -26,17 +26,17 @@ Prédire la probabilité de victoire d'une équipe (Terroristes ou Anti-terroris
 
 ```
 csgo-round-winner/
-├── app/                  # API et démo (étape 10)
+├── app/                  # API et démo
 ├── data/
 │   ├── raw/              # données brutes (non versionnées)
 │   └── processed/        # données nettoyées (non versionnées)
 ├── models/               # modèles entraînés (non versionnés)
 ├── notebooks/            # notebooks d'analyse
 │   ├── 00_notebook_initial.ipynb   # première version du projet
-│   ├── 01_chargement_donnees.ipynb # étape 1 : chargement et qualité
-│   ├── 02_eda.ipynb                # étape 2 : analyse exploratoire
-│   ├── 03_rounds_et_fuite.ipynb    # étape 3 : rounds, matchs et fuite de données
-│   └── 04_feature_engineering.ipynb # étape 4 : création des variables
+│   ├── 01_chargement_donnees.ipynb # chargement et qualité des données
+│   ├── 02_eda.ipynb                # analyse exploratoire
+│   ├── 03_rounds_et_fuite.ipynb    # rounds, matchs et fuite de données
+│   └── 04_feature_engineering.ipynb # création des variables
 ├── reports/              # graphiques et tableaux de résultats
 ├── src/                  # code Python réutilisable
 │   ├── config.py         # chemins et graine aléatoire

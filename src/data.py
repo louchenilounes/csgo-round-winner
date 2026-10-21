@@ -1,7 +1,6 @@
-"""Étape 1 : chargement propre des données CS:GO Round Snapshots.
+"""Chargement des données CS:GO Round Snapshots.
 
-Ce module remplace le parsing « à la main » de l'ancien notebook.
-Il sait :
+Fonctions :
   1. télécharger le fichier ARFF depuis OpenML (une seule fois) ;
   2. le lire correctement (noms de colonnes, valeurs manquantes « ? ») ;
   3. donner les bons types aux colonnes et créer la cible t_win ;
@@ -25,7 +24,7 @@ from src.config import RAW_DATA_DIR, RAW_DATA_PATH, TARGET
 # Constantes
 # --------------------------------------------------------------------------
 
-# Adresse du fichier sur OpenML (la même que dans l'ancien notebook).
+# Adresse du fichier sur OpenML.
 OPENML_URL = "https://www.openml.org/data/download/22102255/dataset"
 
 # Fichier brut téléchargé (format ARFF, un format texte utilisé par OpenML).
@@ -165,7 +164,7 @@ def clean_types(df: pd.DataFrame) -> pd.DataFrame:
     numeric_cols = [c for c in df.columns if c not in CATEGORICAL_COLUMNS + BOOLEAN_COLUMNS]
     df[numeric_cols] = df[numeric_cols].apply(pd.to_numeric, errors="coerce")
 
-    # Cible explicite (dans l'ancien notebook : cat.codes, qui dépendait de l'ordre alphabétique).
+    # Cible explicite (plus sûr que cat.codes, qui dépend de l'ordre alphabétique des catégories).
     winners = set(df["round_winner"].astype(str).unique())
     if not winners <= {"CT", "T"}:
         raise ValueError(f"Valeurs inattendues dans round_winner : {winners}")
@@ -245,7 +244,7 @@ def print_report(report: dict) -> None:
     print(f"{ok(report['n_missing_values'] == 0)}Valeurs manquantes: {report['n_missing_values']}"
           + (f" dans {report['columns_with_missing']}" if report['columns_with_missing'] else ""))
     print(f"   Lignes en double  : {report['n_duplicated_rows']:,} "
-          f"({report['n_duplicated_rows'] / report['n_rows']:.1%}) -> gardées pour l'instant, analysées à l'étape 3")
+          f"({report['n_duplicated_rows'] / report['n_rows']:.1%}) -> conservées (voir la reconstruction des rounds)")
     print(f"   Victoires T       : {report['share_t_win']:.1%}")
     print(f"   Victoires CT      : {report['share_ct_win']:.1%}")
     print(f"   Cartes            : {report['n_maps']} -> {', '.join(report['maps'])}")

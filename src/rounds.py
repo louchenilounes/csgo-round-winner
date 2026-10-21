@@ -1,4 +1,4 @@
-"""Étape 3 : reconstruction des rounds et des matchs, correction des étiquettes,
+"""Reconstruction des rounds et des matchs, correction des étiquettes,
 puis découpage train/test sans fuite.
 
 Le problème
@@ -203,7 +203,7 @@ def build_processed_data(save: bool = True) -> pd.DataFrame:
 
 
 def load_processed() -> pd.DataFrame:
-    """Charge les données de l'étape 3 (les crée si besoin)."""
+    """Charge les données traitées (les crée si besoin)."""
     if not PROCESSED_PATH.exists():
         return build_processed_data()
     d = pd.read_csv(PROCESSED_PATH)

@@ -1,6 +1,6 @@
-"""Étape 4 : création des variables (feature engineering) et pipeline scikit-learn.
+"""Création des variables (feature engineering) et pipelines scikit-learn.
 
-Idées principales, tirées de l'analyse exploratoire (étape 2) :
+Idées principales, tirées de l'analyse exploratoire :
   - les ÉCARTS entre équipes (T - CT) sont plus informatifs que les valeurs brutes ;
   - les ~70 colonnes d'armes sont presque toujours à 0 : on les regroupe par catégorie ;
   - l'effet du temps restant DÉPEND de la bombe : on sépare le temps « avant bombe »

@@ -1,9 +1,9 @@
-"""Étape 3 : mesurer la fuite de données.
+"""Mesure de la fuite de données.
 
-On entraîne EXACTEMENT le même modèle (Random Forest, comme l'ancien notebook)
-avec trois façons de découper les données :
+Le même modèle (Random Forest, comme dans la première version du projet)
+est entraîné avec trois façons de découper les données :
 
-  - « Aléatoire (ancien) » : on mélange les lignes (ce que faisait l'ancien notebook) ;
+  - « Aléatoire (ancien) » : les lignes sont mélangées (protocole de la première version) ;
   - « Par round »          : toutes les photos d'un round sont du même côté ;
   - « Par match »          : toutes les photos d'un match sont du même côté (le plus strict).
 
@@ -23,7 +23,7 @@ from sklearn.model_selection import GroupShuffleSplit, train_test_split
 
 from src.config import SEED, TARGET
 
-# Les 20 variables choisies par l'ancien notebook (corrélation > 0,15 avec t_win).
+# Les 20 variables de la première version (corrélation > 0,15 avec t_win).
 OLD_FEATURES = [
     "ct_armor", "ct_helmets", "t_helmets", "ct_defuse_kits", "t_armor",
     "ct_grenade_flashbang", "ct_players_alive", "ct_grenade_smokegrenade",
