@@ -15,7 +15,7 @@ Prédire la probabilité de victoire d'une équipe (Terroristes ou Anti-terroris
 | 4 | Feature engineering | Terminé |
 | 5 | Baselines | Terminé |
 | 6 | Modèles avancés | Terminé |
-| 7 | Évaluation complète | À faire |
+| 7 | Évaluation complète | Terminé |
 | 8 | Interprétabilité (SHAP) | À faire |
 | 9 | MLOps léger (MLflow) | À faire |
 | 10 | Démo (FastAPI + Streamlit + Docker) | À faire |
@@ -38,7 +38,8 @@ csgo-round-winner/
 │   ├── 03_rounds_et_fuite.ipynb    # rounds, matchs et fuite de données
 │   ├── 04_feature_engineering.ipynb # création des variables
 │   ├── 05_baselines.ipynb          # comparaison à des références simples
-│   └── 06_modeles_avances.ipynb    # comparaison des modèles, optimisation Optuna
+│   ├── 06_modeles_avances.ipynb    # comparaison des modèles, optimisation Optuna
+│   └── 07_evaluation_finale.ipynb  # évaluation sur le test, calibration
 ├── reports/              # graphiques et tableaux de résultats
 ├── src/                  # code Python réutilisable
 │   ├── baselines.py      # règles et modèles de référence
@@ -47,6 +48,7 @@ csgo-round-winner/
 │   ├── eda.py            # calculs de l'analyse exploratoire
 │   ├── evaluation.py     # validation croisée groupée et métriques
 │   ├── features.py       # création des variables et pipelines scikit-learn
+│   ├── final_eval.py     # bootstrap par match, calibration
 │   ├── rounds.py         # reconstruction des rounds/matchs, split train/test
 │   ├── train.py          # entraînement et sauvegarde du modèle final
 │   ├── tuning.py         # optimisation des hyperparamètres (Optuna)
