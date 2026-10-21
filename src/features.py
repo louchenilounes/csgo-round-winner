@@ -124,7 +124,7 @@ def build_preprocessor(scale: bool = False) -> ColumnTransformer:
         [("map", OneHotEncoder(handle_unknown="ignore", sparse_output=False), ["map"])],
         remainder=numeric,
         verbose_feature_names_out=False,
-    )
+    ).set_output(transform="pandas")  # garde les noms de colonnes jusqu'au modèle
 
 
 def build_pipeline(model, scale: bool = False, keep_raw_weapons: bool = False) -> Pipeline:
