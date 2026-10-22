@@ -108,9 +108,11 @@ SIMPLE_LOGREG_COLUMNS = ["players_alive_diff", "bomb_planted", "time_left_no_bom
 
 def simple_logistic_regression(columns: list[str] = SIMPLE_LOGREG_COLUMNS) -> Pipeline:
     """Régression logistique sur quelques variables seulement (joueurs, bombe, temps)."""
-    return Pipeline([
-        ("features", FeatureBuilder()),
-        ("select", ColumnSelector(columns)),
-        ("scale", StandardScaler()),
-        ("model", LogisticRegression(max_iter=1000)),
-    ])
+    return Pipeline(
+        [
+            ("features", FeatureBuilder()),
+            ("select", ColumnSelector(columns)),
+            ("scale", StandardScaler()),
+            ("model", LogisticRegression(max_iter=1000)),
+        ]
+    )

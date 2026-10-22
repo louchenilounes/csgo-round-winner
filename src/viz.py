@@ -31,25 +31,27 @@ CMAP_WIN = LinearSegmentedColormap.from_list("ct_t", [COLOR_CT, COLOR_NEUTRAL, C
 
 def set_style() -> None:
     """Applique un style sobre : grille légère, pas de bordures inutiles."""
-    plt.rcParams.update({
-        "figure.dpi": 110,
-        "savefig.dpi": 150,
-        "font.size": 10,
-        "axes.titlesize": 12,
-        "axes.titleweight": "bold",
-        "axes.titlelocation": "left",
-        "axes.labelcolor": COLOR_TEXT_MUTED,
-        "axes.edgecolor": COLOR_GRID,
-        "axes.spines.top": False,
-        "axes.spines.right": False,
-        "axes.grid": True,
-        "axes.axisbelow": True,
-        "grid.color": COLOR_GRID,
-        "grid.linewidth": 0.8,
-        "xtick.color": COLOR_TEXT_MUTED,
-        "ytick.color": COLOR_TEXT_MUTED,
-        "legend.frameon": False,
-    })
+    plt.rcParams.update(
+        {
+            "figure.dpi": 110,
+            "savefig.dpi": 150,
+            "font.size": 10,
+            "axes.titlesize": 12,
+            "axes.titleweight": "bold",
+            "axes.titlelocation": "left",
+            "axes.labelcolor": COLOR_TEXT_MUTED,
+            "axes.edgecolor": COLOR_GRID,
+            "axes.spines.top": False,
+            "axes.spines.right": False,
+            "axes.grid": True,
+            "axes.axisbelow": True,
+            "grid.color": COLOR_GRID,
+            "grid.linewidth": 0.8,
+            "xtick.color": COLOR_TEXT_MUTED,
+            "ytick.color": COLOR_TEXT_MUTED,
+            "legend.frameon": False,
+        }
+    )
 
 
 def save_fig(fig, name: str) -> Path:

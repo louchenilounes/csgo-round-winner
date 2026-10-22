@@ -38,8 +38,9 @@ def compute_metrics(y_true, proba) -> dict:
     }
 
 
-def grouped_cv(pipeline, df: pd.DataFrame, group_col: str = "match_id",
-               n_folds: int = N_FOLDS) -> pd.DataFrame:
+def grouped_cv(
+    pipeline, df: pd.DataFrame, group_col: str = "match_id", n_folds: int = N_FOLDS
+) -> pd.DataFrame:
     """Validation croisée GroupKFold. Renvoie une ligne de métriques par pli."""
     y = df[TARGET].to_numpy()
     groups = df[group_col].to_numpy()

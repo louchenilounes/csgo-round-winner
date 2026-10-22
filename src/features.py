@@ -31,17 +31,40 @@ WEAPON_GROUPS = {
     "other_sniper": ["ssg08", "g3sg1", "scar20"],  # scout et snipers automatiques
     "smg": ["mac10", "mp9", "mp7", "mp5sd", "ump45", "p90", "bizon"],
     "heavy": ["nova", "xm1014", "mag7", "sawedoff", "m249", "negev"],
-    "pistol": ["glock", "usps", "p2000", "p250", "fiveseven", "tec9", "cz75auto",
-               "deagle", "r8revolver", "elite"],
+    "pistol": [
+        "glock",
+        "usps",
+        "p2000",
+        "p250",
+        "fiveseven",
+        "tec9",
+        "cz75auto",
+        "deagle",
+        "r8revolver",
+        "elite",
+    ],
 }
 # L'AWP est gardé seul : c'est l'arme la plus chère et la plus décisive du jeu.
 
 GRENADES = ["flashbang", "smokegrenade", "hegrenade", "incendiarygrenade", "molotovgrenade", "decoygrenade"]
 
 # Variables « de base » gardées telles quelles.
-BASE_COLUMNS = ["time_left", "ct_score", "t_score", "ct_health", "t_health", "ct_armor", "t_armor",
-                "ct_money", "t_money", "ct_helmets", "t_helmets", "ct_defuse_kits",
-                "ct_players_alive", "t_players_alive"]
+BASE_COLUMNS = [
+    "time_left",
+    "ct_score",
+    "t_score",
+    "ct_health",
+    "t_health",
+    "ct_armor",
+    "t_armor",
+    "ct_money",
+    "t_money",
+    "ct_helmets",
+    "t_helmets",
+    "ct_defuse_kits",
+    "ct_players_alive",
+    "t_players_alive",
+]
 
 
 def weapon_columns(side: str, group: str) -> list[str]:
@@ -85,15 +108,28 @@ class FeatureBuilder(BaseEstimator, TransformerMixin):
             out[f"{side}_primary"] = sum(out[f"{side}_{g}"] for g in WEAPON_GROUPS if g != "pistol")
 
         # 3. Écarts T - CT (positif = avantage T)
-        for name in ["players_alive", "health", "armor", "money", "helmets", "grenades",
-                     "primary", "rifle", "awp"]:
+        for name in [
+            "players_alive",
+            "health",
+            "armor",
+            "money",
+            "helmets",
+            "grenades",
+            "primary",
+            "rifle",
+            "awp",
+        ]:
             out[f"{name}_diff"] = out[f"t_{name}"] - out[f"ct_{name}"]
 
         # 4. Moyennes par joueur vivant (0 si plus personne)
         for side in SIDES:
             alive = out[f"{side}_players_alive"]
-            out[f"{side}_health_per_player"] = np.where(alive > 0, out[f"{side}_health"] / alive.replace(0, 1), 0.0)
-            out[f"{side}_armor_per_player"] = np.where(alive > 0, out[f"{side}_armor"] / alive.replace(0, 1), 0.0)
+            out[f"{side}_health_per_player"] = np.where(
+                alive > 0, out[f"{side}_health"] / alive.replace(0, 1), 0.0
+            )
+            out[f"{side}_armor_per_player"] = np.where(
+                alive > 0, out[f"{side}_armor"] / alive.replace(0, 1), 0.0
+            )
 
         # 5. Temps et bombe : l'effet du temps s'inverse quand la bombe est posée
         out["time_left_no_bomb"] = out["time_left"] * (1 - bomb)
@@ -129,11 +165,13 @@ def build_preprocessor(scale: bool = False) -> ColumnTransformer:
 
 def build_pipeline(model, scale: bool = False, keep_raw_weapons: bool = False) -> Pipeline:
     """Pipeline complet : création des variables -> encodage -> modèle."""
-    return Pipeline([
-        ("features", FeatureBuilder(keep_raw_weapons=keep_raw_weapons)),
-        ("prep", build_preprocessor(scale=scale)),
-        ("model", model),
-    ])
+    return Pipeline(
+        [
+            ("features", FeatureBuilder(keep_raw_weapons=keep_raw_weapons)),
+            ("prep", build_preprocessor(scale=scale)),
+            ("model", model),
+        ]
+    )
 
 
 class RawColumns(BaseEstimator, TransformerMixin):
@@ -152,8 +190,10 @@ class RawColumns(BaseEstimator, TransformerMixin):
 
 def build_raw_pipeline(model, scale: bool = False) -> Pipeline:
     """Même pipeline, mais avec les variables brutes uniquement (référence)."""
-    return Pipeline([
-        ("features", RawColumns()),
-        ("prep", build_preprocessor(scale=scale)),
-        ("model", model),
-    ])
+    return Pipeline(
+        [
+            ("features", RawColumns()),
+            ("prep", build_preprocessor(scale=scale)),
+            ("model", model),
+        ]
+    )

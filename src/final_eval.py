@@ -1,9 +1,9 @@
 """Outils pour l'évaluation finale sur le test.
 
-  - intervalles de confiance par bootstrap en ré-échantillonnant des MATCHS entiers
-    (les snapshots d'un même match ne sont pas indépendants) ;
-  - courbe de calibration et erreur de calibration (ECE) : quand le modèle annonce
-    70 %, les T gagnent-ils vraiment environ 70 % du temps ?
+- intervalles de confiance par bootstrap en ré-échantillonnant des MATCHS entiers
+  (les snapshots d'un même match ne sont pas indépendants) ;
+- courbe de calibration et erreur de calibration (ECE) : quand le modèle annonce
+  70 %, les T gagnent-ils vraiment environ 70 % du temps ?
 """
 
 from __future__ import annotations
@@ -15,8 +15,9 @@ from src.config import SEED
 from src.evaluation import compute_metrics
 
 
-def bootstrap_by_group(y, proba, groups, n_boot: int = 1000, seed: int = SEED,
-                       alpha: float = 0.05) -> pd.DataFrame:
+def bootstrap_by_group(
+    y, proba, groups, n_boot: int = 1000, seed: int = SEED, alpha: float = 0.05
+) -> pd.DataFrame:
     """Intervalle de confiance de chaque métrique, en tirant des groupes avec remise."""
     y, proba, groups = np.asarray(y), np.asarray(proba), np.asarray(groups)
     unique = np.unique(groups)
@@ -31,11 +32,13 @@ def bootstrap_by_group(y, proba, groups, n_boot: int = 1000, seed: int = SEED,
         samples.append(compute_metrics(y[idx], proba[idx]))
     samples = pd.DataFrame(samples)
     point = compute_metrics(y, proba)
-    return pd.DataFrame({
-        "valeur": pd.Series(point),
-        "borne_basse": samples.quantile(alpha / 2),
-        "borne_haute": samples.quantile(1 - alpha / 2),
-    })
+    return pd.DataFrame(
+        {
+            "valeur": pd.Series(point),
+            "borne_basse": samples.quantile(alpha / 2),
+            "borne_haute": samples.quantile(1 - alpha / 2),
+        }
+    )
 
 
 def calibration_table(y, proba, n_bins: int = 10) -> pd.DataFrame:
@@ -43,9 +46,9 @@ def calibration_table(y, proba, n_bins: int = 10) -> pd.DataFrame:
     d = pd.DataFrame({"y": np.asarray(y), "p": np.asarray(proba)})
     edges = np.linspace(0, 1, n_bins + 1)
     d["bin"] = pd.cut(d["p"], edges, include_lowest=True)
-    out = d.groupby("bin", observed=True).agg(proba_moyenne=("p", "mean"),
-                                              frequence_observee=("y", "mean"),
-                                              n=("y", "size"))
+    out = d.groupby("bin", observed=True).agg(
+        proba_moyenne=("p", "mean"), frequence_observee=("y", "mean"), n=("y", "size")
+    )
     return out.reset_index()
 
 
@@ -62,6 +65,11 @@ def metrics_by(df: pd.DataFrame, y_col: str, proba_col: str, by) -> pd.DataFrame
     for key, part in df.groupby(by, observed=True):
         if part[y_col].nunique() < 2:
             continue
-        rows.append({"groupe": key, "n": len(part),
-                     **compute_metrics(part[y_col].to_numpy(), part[proba_col].to_numpy())})
+        rows.append(
+            {
+                "groupe": key,
+                "n": len(part),
+                **compute_metrics(part[y_col].to_numpy(), part[proba_col].to_numpy()),
+            }
+        )
     return pd.DataFrame(rows)

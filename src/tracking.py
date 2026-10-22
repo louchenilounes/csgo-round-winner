@@ -54,8 +54,14 @@ def log_cv_run(name: str, params: dict, folds: pd.DataFrame, tags: dict | None =
         return run.info.run_id
 
 
-def log_final_model(pipeline, params: dict, test_metrics: dict, X_example: pd.DataFrame,
-                    artifacts: list[Path] | None = None, register: bool = True) -> str:
+def log_final_model(
+    pipeline,
+    params: dict,
+    test_metrics: dict,
+    X_example: pd.DataFrame,
+    artifacts: list[Path] | None = None,
+    register: bool = True,
+) -> str:
     """Enregistre le modèle final (pipeline complet), ses métriques de test, et l'ajoute au registre."""
     with mlflow.start_run(run_name="Modèle final") as run:
         mlflow.set_tags({"type": "modele_final"})

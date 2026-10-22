@@ -20,8 +20,14 @@ import pandas as pd
 import pytest
 
 from src.leakage import share_of_test_rounds_seen_in_train
-from src.rounds import (add_round_ids, check_rounds, drop_impossible_rows, fix_labels,
-                        make_split, score_based_winner)
+from src.rounds import (
+    add_round_ids,
+    check_rounds,
+    drop_impossible_rows,
+    fix_labels,
+    make_split,
+    score_based_winner,
+)
 
 ROWS = [
     # map,       ct, t, time,  bomb,  winner, ct_alive, t_alive
@@ -31,9 +37,9 @@ ROWS = [
     ("de_dust2", 0, 1, 174.9, False, "CT", 5, 5),  # 1re photo : gagnant du round précédent
     ("de_dust2", 0, 1, 50.0, False, "T", 4, 5),
     ("de_dust2", 0, 1, 20.0, False, "T", 3, 5),
-    ("de_dust2", 0, 1, 40.0, True, "T", 3, 5),    # bombe posée : chrono remonte, même round
+    ("de_dust2", 0, 1, 40.0, True, "T", 3, 5),  # bombe posée : chrono remonte, même round
     ("de_dust2", 0, 2, 174.9, False, "T", 5, 5),  # 1re photo : gagnant précédent (T)
-    ("de_dust2", 0, 2, 120.0, False, "CT", 5, 6), # 6 joueurs : ligne impossible
+    ("de_dust2", 0, 2, 120.0, False, "CT", 5, 6),  # 6 joueurs : ligne impossible
     ("de_dust2", 0, 2, 100.0, False, "CT", 5, 5),
     ("de_dust2", 0, 0, 175.0, False, "T", 5, 5),
     ("de_dust2", 0, 0, 100.0, False, "T", 5, 5),
@@ -43,8 +49,19 @@ ROWS = [
 
 @pytest.fixture
 def seq():
-    df = pd.DataFrame(ROWS, columns=["map", "ct_score", "t_score", "time_left", "bomb_planted",
-                                     "round_winner", "ct_players_alive", "t_players_alive"])
+    df = pd.DataFrame(
+        ROWS,
+        columns=[
+            "map",
+            "ct_score",
+            "t_score",
+            "time_left",
+            "bomb_planted",
+            "round_winner",
+            "ct_players_alive",
+            "t_players_alive",
+        ],
+    )
     df["map"] = df["map"].astype("category")
     df["round_winner"] = df["round_winner"].astype("category")
     df["bomb_planted"] = df["bomb_planted"].astype("boolean")
@@ -86,9 +103,9 @@ def test_fix_labels_uses_last_snapshot(rounds):
 
 def test_score_based_winner(rounds):
     sw = score_based_winner(rounds)
-    assert sw.loc[1] == "T"      # t_score passe de 1 à 2
-    assert sw.loc[0] == "T"      # t_score passe de 0 à 1
-    assert pd.isna(sw.loc[2])    # dernier round du match : inconnu
+    assert sw.loc[1] == "T"  # t_score passe de 1 à 2
+    assert sw.loc[0] == "T"  # t_score passe de 0 à 1
+    assert pd.isna(sw.loc[2])  # dernier round du match : inconnu
 
 
 def test_check_rounds(rounds):

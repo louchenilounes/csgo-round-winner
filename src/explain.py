@@ -64,9 +64,9 @@ def explain_row(pipeline: Pipeline, row: pd.DataFrame, top: int = 8) -> pd.DataF
             return str(row["map"].iloc[0])
         return values[name]
 
-    table = pd.DataFrame({"variable": main,
-                          "valeur": [shown_value(n) for n in main],
-                          "contribution": contrib[main].to_numpy()})
+    table = pd.DataFrame(
+        {"variable": main, "valeur": [shown_value(n) for n in main], "contribution": contrib[main].to_numpy()}
+    )
     if len(rest):
         table.loc[len(table)] = [f"{len(rest)} autres variables", "", contrib[rest].sum()]
     table.attrs["proba_base"] = float(_sigmoid(base))

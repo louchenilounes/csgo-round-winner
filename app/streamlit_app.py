@@ -22,39 +22,130 @@ st.set_page_config(page_title="CS:GO Round Winner", layout="wide")
 set_style()
 
 LABELS = {
-    "primary_diff": "Écart d'armes principales", "armor_diff": "Écart d'armure",
-    "players_alive_diff": "Écart de joueurs vivants", "health_diff": "Écart de santé",
-    "bomb_planted": "Bombe posée", "money_diff": "Écart d'argent", "rifle_diff": "Écart de fusils",
-    "awp_diff": "Écart d'AWP", "time_left": "Temps restant", "time_left_no_bomb": "Temps restant (sans bombe)",
-    "time_left_bomb": "Temps restant (bombe posée)", "map": "Carte", "helmets_diff": "Écart de casques",
-    "grenades_diff": "Écart de grenades", "score_diff": "Écart de score", "round_number": "Numéro du round",
+    "primary_diff": "Écart d'armes principales",
+    "armor_diff": "Écart d'armure",
+    "players_alive_diff": "Écart de joueurs vivants",
+    "health_diff": "Écart de santé",
+    "bomb_planted": "Bombe posée",
+    "money_diff": "Écart d'argent",
+    "rifle_diff": "Écart de fusils",
+    "awp_diff": "Écart d'AWP",
+    "time_left": "Temps restant",
+    "time_left_no_bomb": "Temps restant (sans bombe)",
+    "time_left_bomb": "Temps restant (bombe posée)",
+    "map": "Carte",
+    "helmets_diff": "Écart de casques",
+    "grenades_diff": "Écart de grenades",
+    "score_diff": "Écart de score",
+    "round_number": "Numéro du round",
 }
 
 SCENARIOS = {
     "Début de round, achat complet des deux côtés": dict(
-        time_left=115, bomb=False, ct=dict(players_alive=5, health=500, armor=500, money=3000, helmets=5,
-                                           rifles=4, awp=1, smgs=0, pistols=5, grenades=12),
-        t=dict(players_alive=5, health=500, armor=500, money=3500, helmets=5, rifles=4, awp=1, smgs=0,
-               pistols=5, grenades=12)),
+        time_left=115,
+        bomb=False,
+        ct=dict(
+            players_alive=5,
+            health=500,
+            armor=500,
+            money=3000,
+            helmets=5,
+            rifles=4,
+            awp=1,
+            smgs=0,
+            pistols=5,
+            grenades=12,
+        ),
+        t=dict(
+            players_alive=5,
+            health=500,
+            armor=500,
+            money=3500,
+            helmets=5,
+            rifles=4,
+            awp=1,
+            smgs=0,
+            pistols=5,
+            grenades=12,
+        ),
+    ),
     "Bombe posée, 2 T contre 3 CT": dict(
-        time_left=30, bomb=True, ct=dict(players_alive=3, health=240, armor=250, money=1500, helmets=3,
-                                         rifles=3, awp=0, smgs=0, pistols=3, grenades=4),
-        t=dict(players_alive=2, health=150, armor=180, money=800, helmets=2, rifles=2, awp=0, smgs=0,
-               pistols=2, grenades=2)),
+        time_left=30,
+        bomb=True,
+        ct=dict(
+            players_alive=3,
+            health=240,
+            armor=250,
+            money=1500,
+            helmets=3,
+            rifles=3,
+            awp=0,
+            smgs=0,
+            pistols=3,
+            grenades=4,
+        ),
+        t=dict(
+            players_alive=2,
+            health=150,
+            armor=180,
+            money=800,
+            helmets=2,
+            rifles=2,
+            awp=0,
+            smgs=0,
+            pistols=2,
+            grenades=2,
+        ),
+    ),
     "Round d'éco des T": dict(
-        time_left=115, bomb=False, ct=dict(players_alive=5, health=500, armor=500, money=6000, helmets=5,
-                                           rifles=5, awp=0, smgs=0, pistols=5, grenades=12),
-        t=dict(players_alive=5, health=500, armor=200, money=600, helmets=0, rifles=0, awp=0, smgs=0,
-               pistols=5, grenades=3)),
+        time_left=115,
+        bomb=False,
+        ct=dict(
+            players_alive=5,
+            health=500,
+            armor=500,
+            money=6000,
+            helmets=5,
+            rifles=5,
+            awp=0,
+            smgs=0,
+            pistols=5,
+            grenades=12,
+        ),
+        t=dict(
+            players_alive=5,
+            health=500,
+            armor=200,
+            money=600,
+            helmets=0,
+            rifles=0,
+            awp=0,
+            smgs=0,
+            pistols=5,
+            grenades=3,
+        ),
+    ),
 }
 
 
 SIDE_LABELS = {
-    "players_alive": "Joueurs vivants", "health": "Santé", "armor": "Armure", "money": "Argent",
-    "helmets": "Casques", "primary": "Armes principales", "rifle": "Fusils", "awp": "AWP",
-    "other_sniper": "Autres snipers", "smg": "SMG", "heavy": "Armes lourdes", "pistol": "Pistolets",
-    "grenades": "Grenades", "health_per_player": "Santé par joueur", "armor_per_player": "Armure par joueur",
-    "defuse_kits": "Kits de désamorçage", "score": "Score",
+    "players_alive": "Joueurs vivants",
+    "health": "Santé",
+    "armor": "Armure",
+    "money": "Argent",
+    "helmets": "Casques",
+    "primary": "Armes principales",
+    "rifle": "Fusils",
+    "awp": "AWP",
+    "other_sniper": "Autres snipers",
+    "smg": "SMG",
+    "heavy": "Armes lourdes",
+    "pistol": "Pistolets",
+    "grenades": "Grenades",
+    "health_per_player": "Santé par joueur",
+    "armor_per_player": "Armure par joueur",
+    "defuse_kits": "Kits de désamorçage",
+    "score": "Score",
 }
 
 
@@ -63,8 +154,8 @@ def label(name: str) -> str:
     if name in LABELS:
         return LABELS[name]
     for side in ("ct", "t"):
-        if name.startswith(f"{side}_") and name[len(side) + 1:] in SIDE_LABELS:
-            return f"{SIDE_LABELS[name[len(side) + 1:]]} ({side.upper()})"
+        if name.startswith(f"{side}_") and name[len(side) + 1 :] in SIDE_LABELS:
+            return f"{SIDE_LABELS[name[len(side) + 1 :]]} ({side.upper()})"
     return name
 
 
@@ -82,8 +173,18 @@ def apply_scenario(name: str) -> None:
             st.session_state[f"{side}_{key}"] = value
 
 
-DEFAULT_TEAM = dict(players_alive=5, health=500, armor=500, money=4000, helmets=5,
-                    rifles=4, awp=1, smgs=0, pistols=5, grenades=10)
+DEFAULT_TEAM = dict(
+    players_alive=5,
+    health=500,
+    armor=500,
+    money=4000,
+    helmets=5,
+    rifles=4,
+    awp=1,
+    smgs=0,
+    pistols=5,
+    grenades=10,
+)
 
 
 def init_state() -> None:
@@ -116,13 +217,25 @@ def team_inputs(side: str, title: str) -> dict:
     smgs = c1.number_input("SMG", 0, 5, key=f"{side}_smgs")
     pistols = c2.number_input("Pistolets", 0, 5, key=f"{side}_pistols")
     grenades = st.slider("Grenades", 0, 20, key=f"{side}_grenades")
-    return dict(players_alive=alive, health=health, armor=armor, money=money, helmets=helmets,
-                rifles=rifles, awp=awp, smgs=smgs, pistols=pistols, grenades=grenades)
+    return dict(
+        players_alive=alive,
+        health=health,
+        armor=armor,
+        money=money,
+        helmets=helmets,
+        rifles=rifles,
+        awp=awp,
+        smgs=smgs,
+        pistols=pistols,
+        grenades=grenades,
+    )
 
 
 st.title("Probabilité de victoire d'un round de CS:GO")
-st.caption("Modèle LightGBM entraîné sur 97 000 snapshots de matchs professionnels "
-           "(ROC-AUC 0,806 sur des matchs jamais vus). Réglez la situation, la probabilité se met à jour.")
+st.caption(
+    "Modèle LightGBM entraîné sur 97 000 snapshots de matchs professionnels "
+    "(ROC-AUC 0,806 sur des matchs jamais vus). Réglez la situation, la probabilité se met à jour."
+)
 
 if not MODEL_PATH.exists():
     st.error("Modèle introuvable : lancer d'abord `python -m src.train`.")
@@ -141,8 +254,9 @@ with st.sidebar:
     if bomb:
         clamp("time_left", 40)  # bombe posée : le chrono repart à 40 s au maximum
     # maximum fixe : changer le maximum recréerait le curseur et perdrait sa valeur
-    time_left = st.slider("Temps restant (s)", 0, 175, key="time_left",
-                          help="Avec la bombe posée, 40 s au maximum.")
+    time_left = st.slider(
+        "Temps restant (s)", 0, 175, key="time_left", help="Avec la bombe posée, 40 s au maximum."
+    )
     c1, c2 = st.columns(2)
     ct_score = c1.number_input("Score CT", 0, 30, key="ct_score")
     t_score = c2.number_input("Score T", 0, 30, key="t_score")
@@ -155,11 +269,20 @@ with col_t:
     t = team_inputs("t", "Terroristes (T)")
 
 try:
-    state = RoundState(map=game_map, time_left=time_left, bomb_planted=bomb, ct_score=ct_score,
-                       t_score=t_score, ct_defuse_kits=kits, ct=TeamState(**ct), t=TeamState(**t))
+    state = RoundState(
+        map=game_map,
+        time_left=time_left,
+        bomb_planted=bomb,
+        ct_score=ct_score,
+        t_score=t_score,
+        ct_defuse_kits=kits,
+        ct=TeamState(**ct),
+        t=TeamState(**t),
+    )
 except ValidationError as e:
-    st.error("Situation impossible : " + "; ".join(err["msg"].removeprefix("Value error, ")
-                                                   for err in e.errors()))
+    st.error(
+        "Situation impossible : " + "; ".join(err["msg"].removeprefix("Value error, ") for err in e.errors())
+    )
     st.stop()
 
 result = predict(get_model(), state, top=6)

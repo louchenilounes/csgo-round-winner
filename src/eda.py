@@ -15,9 +15,7 @@ from src.config import TARGET
 
 def win_rate_by(df: pd.DataFrame, col: str) -> pd.DataFrame:
     """Taux de victoire T et nombre de lignes pour chaque valeur de `col`."""
-    out = (df.groupby(col, observed=True)[TARGET]
-             .agg(t_win_rate="mean", n="size")
-             .reset_index())
+    out = df.groupby(col, observed=True)[TARGET].agg(t_win_rate="mean", n="size").reset_index()
     return out
 
 
@@ -29,10 +27,12 @@ def alive_matrix(df: pd.DataFrame, max_players: int = 5) -> tuple[pd.DataFrame, 
     """
     ok = (df["ct_players_alive"] <= max_players) & (df["t_players_alive"] <= max_players)
     d = df.loc[ok]
-    rates = d.pivot_table(index="ct_players_alive", columns="t_players_alive",
-                          values=TARGET, aggfunc="mean", observed=True)
-    counts = d.pivot_table(index="ct_players_alive", columns="t_players_alive",
-                           values=TARGET, aggfunc="size", observed=True)
+    rates = d.pivot_table(
+        index="ct_players_alive", columns="t_players_alive", values=TARGET, aggfunc="mean", observed=True
+    )
+    counts = d.pivot_table(
+        index="ct_players_alive", columns="t_players_alive", values=TARGET, aggfunc="size", observed=True
+    )
     rates.index = rates.index.astype(int)
     rates.columns = rates.columns.astype(int)
     counts.index = counts.index.astype(int)
@@ -65,9 +65,11 @@ def time_profile(df: pd.DataFrame, step: float = 10.0) -> pd.DataFrame:
     """
     edges = np.arange(0, df["time_left"].max() + step, step)
     d = df.assign(time_bin=pd.cut(df["time_left"], bins=edges, include_lowest=True))
-    out = (d.groupby(["bomb_planted", "time_bin"], observed=True)[TARGET]
-             .agg(t_win_rate="mean", n="size")
-             .reset_index())
+    out = (
+        d.groupby(["bomb_planted", "time_bin"], observed=True)[TARGET]
+        .agg(t_win_rate="mean", n="size")
+        .reset_index()
+    )
     out["time_mid"] = out["time_bin"].apply(lambda iv: iv.mid).astype(float)
     return out
 

@@ -4,8 +4,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from src.final_eval import (bootstrap_by_group, calibration_table, expected_calibration_error,
-                            metrics_by)
+from src.final_eval import bootstrap_by_group, calibration_table, expected_calibration_error, metrics_by
 
 
 @pytest.fixture
@@ -39,8 +38,9 @@ def test_ece_detects_overconfidence():
 
 
 def test_metrics_by_group():
-    df = pd.DataFrame({"y": [0, 1, 0, 1, 1, 1], "p": [0.2, 0.8, 0.3, 0.6, 0.9, 0.7],
-                       "map": ["a", "a", "b", "b", "c", "c"]})
+    df = pd.DataFrame(
+        {"y": [0, 1, 0, 1, 1, 1], "p": [0.2, 0.8, 0.3, 0.6, 0.9, 0.7], "map": ["a", "a", "b", "b", "c", "c"]}
+    )
     out = metrics_by(df, "y", "p", "map")
     assert set(out["groupe"]) == {"a", "b"}  # la carte « c » n'a qu'une classe : ignorée
     assert out.loc[out["groupe"] == "a", "accuracy"].iloc[0] == 1.0

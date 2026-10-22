@@ -25,11 +25,25 @@ from src.config import SEED, TARGET
 
 # Les 20 variables de la première version (corrélation > 0,15 avec t_win).
 OLD_FEATURES = [
-    "ct_armor", "ct_helmets", "t_helmets", "ct_defuse_kits", "t_armor",
-    "ct_grenade_flashbang", "ct_players_alive", "ct_grenade_smokegrenade",
-    "ct_weapon_awp", "t_weapon_ak47", "ct_health", "bomb_planted",
-    "ct_weapon_m4a4", "ct_grenade_hegrenade", "ct_grenade_incendiarygrenade",
-    "ct_weapon_ak47", "t_grenade_flashbang", "ct_weapon_sg553", "t_weapon_sg553",
+    "ct_armor",
+    "ct_helmets",
+    "t_helmets",
+    "ct_defuse_kits",
+    "t_armor",
+    "ct_grenade_flashbang",
+    "ct_players_alive",
+    "ct_grenade_smokegrenade",
+    "ct_weapon_awp",
+    "t_weapon_ak47",
+    "ct_health",
+    "bomb_planted",
+    "ct_weapon_m4a4",
+    "ct_grenade_hegrenade",
+    "ct_grenade_incendiarygrenade",
+    "ct_weapon_ak47",
+    "t_grenade_flashbang",
+    "ct_weapon_sg553",
+    "t_weapon_sg553",
     "ct_weapon_usps",
 ]
 
@@ -56,8 +70,9 @@ def split_indices(df: pd.DataFrame, how: str, test_size: float = 0.2, seed: int 
     return next(gss.split(idx, groups=df[group]))
 
 
-def evaluate_split(df: pd.DataFrame, features: list[str], how: str,
-                   n_estimators: int = 100, seed: int = SEED) -> dict:
+def evaluate_split(
+    df: pd.DataFrame, features: list[str], how: str, n_estimators: int = 100, seed: int = SEED
+) -> dict:
     """Entraîne un Random Forest et renvoie ses scores sur le train et le test."""
     tr, te = split_indices(df, how, seed=seed)
     X, y = make_X(df, features), df[TARGET].to_numpy()
@@ -81,17 +96,28 @@ def share_of_test_rounds_seen_in_train(df: pd.DataFrame, how: str, seed: int = S
     return float(df["round_id"].iloc[te].isin(seen).mean())
 
 
-def compare_splits(df: pd.DataFrame, feature_sets: dict[str, list[str]],
-                   splits=("random", "round", "match"), n_estimators: int = 100) -> pd.DataFrame:
+def compare_splits(
+    df: pd.DataFrame,
+    feature_sets: dict[str, list[str]],
+    splits=("random", "round", "match"),
+    n_estimators: int = 100,
+) -> pd.DataFrame:
     """Tableau de comparaison : une ligne par (jeu de variables, découpage)."""
     names = {"random": "Aléatoire (ancien)", "round": "Par round", "match": "Par match"}
     rows = []
     for fs_name, feats in feature_sets.items():
         for how in splits:
             res = evaluate_split(df, feats, how, n_estimators=n_estimators)
-            rows.append({"variables": fs_name, "découpage": names[how],
-                         "rounds du test vus en train": share_of_test_rounds_seen_in_train(df, how),
-                         **res})
-            print(f"  {fs_name:<22} | {names[how]:<18} | accuracy test {res['test_accuracy']:.3f} "
-                  f"| AUC {res['test_roc_auc']:.3f} | {res['seconds']:.0f} s")
+            rows.append(
+                {
+                    "variables": fs_name,
+                    "découpage": names[how],
+                    "rounds du test vus en train": share_of_test_rounds_seen_in_train(df, how),
+                    **res,
+                }
+            )
+            print(
+                f"  {fs_name:<22} | {names[how]:<18} | accuracy test {res['test_accuracy']:.3f} "
+                f"| AUC {res['test_roc_auc']:.3f} | {res['seconds']:.0f} s"
+            )
     return pd.DataFrame(rows)

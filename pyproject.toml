@@ -1,0 +1,17 @@
+[project]
+name = "csgo-round-winner"
+version = "1.0.0"
+description = "Probabilité de victoire d'un round de CS:GO à partir de l'état de la partie"
+requires-python = ">=3.11"
+
+[tool.ruff]
+line-length = 110
+target-version = "py311"
+extend-exclude = ["notebooks"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP"]
+ignore = ["B905"]  # zip() sans strict= : les longueurs sont égales par construction
+
+[tool.ruff.lint.isort]
+known-first-party = ["src", "app"]

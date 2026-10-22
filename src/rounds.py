@@ -53,6 +53,7 @@ TEST_SIZE = 0.2
 # 1. Nettoyage minimal
 # --------------------------------------------------------------------------
 
+
 def drop_impossible_rows(df: pd.DataFrame) -> pd.DataFrame:
     """Supprime les lignes impossibles dans le jeu (plus de 5 joueurs vivants dans une équipe)."""
     bad = (df["ct_players_alive"] > MAX_PLAYERS) | (df["t_players_alive"] > MAX_PLAYERS)
@@ -64,6 +65,7 @@ def drop_impossible_rows(df: pd.DataFrame) -> pd.DataFrame:
 # --------------------------------------------------------------------------
 # 2. Reconstruction des matchs et des rounds
 # --------------------------------------------------------------------------
+
 
 def add_round_ids(df: pd.DataFrame) -> pd.DataFrame:
     """Ajoute match_id, round_id et snapshot_idx (numéro de la photo dans le round).
@@ -89,6 +91,7 @@ def add_round_ids(df: pd.DataFrame) -> pd.DataFrame:
 # 3. Correction des étiquettes
 # --------------------------------------------------------------------------
 
+
 def fix_labels(d: pd.DataFrame) -> pd.DataFrame:
     """Gagnant du round = gagnant de sa dernière photo. Recalcule t_win.
 
@@ -108,8 +111,9 @@ def score_based_winner(d: pd.DataFrame) -> pd.Series:
     CT si seul ct_score augmente de 1, T si seul t_score augmente de 1, sinon inconnu
     (dernier round du match, changement de côté à la mi-temps...).
     """
-    r = d.groupby("round_id").agg(match_id=("match_id", "first"),
-                                  ct=("ct_score", "first"), t=("t_score", "first"))
+    r = d.groupby("round_id").agg(
+        match_id=("match_id", "first"), ct=("ct_score", "first"), t=("t_score", "first")
+    )
     dct = r.groupby("match_id")["ct"].shift(-1) - r["ct"]
     dt = r.groupby("match_id")["t"].shift(-1) - r["t"]
     winner = np.where((dct == 1) & (dt == 0), "CT", np.where((dct == 0) & (dt == 1), "T", None))
@@ -119,6 +123,7 @@ def score_based_winner(d: pd.DataFrame) -> pd.Series:
 # --------------------------------------------------------------------------
 # 4. Vérifications
 # --------------------------------------------------------------------------
+
 
 def check_rounds(d: pd.DataFrame) -> dict:
     """Contrôles de cohérence de la reconstruction et des étiquettes."""
@@ -160,13 +165,19 @@ def print_round_report(r: dict) -> None:
     print(f"Matchs reconstruits               : {r['n_matches']:,}")
     print(f"Rounds reconstruits               : {r['n_rounds']:,}")
     print(f"Rounds par match (médiane)        : {r['rounds_per_match_median']:.0f}")
-    print(f"Photos par round (médiane / max)  : {r['snapshots_per_round_median']:.0f} / {r['snapshots_per_round_max']}")
+    print(
+        f"Photos par round (médiane / max)  : "
+        f"{r['snapshots_per_round_median']:.0f} / {r['snapshots_per_round_max']}"
+    )
     print(f"Rounds de plus de 20 photos       : {r['rounds_over_20_snapshots']} (pauses : chrono bloqué)")
     print("Écart de score entre 2 rounds consécutifs d'un même match :")
     print(f"   +1 (normal)                    : {r['share_score_step_1']:.1%}")
     print(f"   +2 ou plus (round sans photo)  : {r['share_score_step_2plus']:.1%}")
     print("--- Étiquettes ---")
-    print(f"Lignes dont le gagnant a été corrigé : {r['n_labels_fixed']:,} ({r['n_labels_fixed'] / r['n_rows']:.1%})")
+    print(
+        f"Lignes dont le gagnant a été corrigé : "
+        f"{r['n_labels_fixed']:,} ({r['n_labels_fixed'] / r['n_rows']:.1%})"
+    )
     print(f"Rounds avec 2 gagnants (doit = 0)    : {r['rounds_with_several_winners']}")
     print(f"Gagnant vérifiable par le score      : {r['share_winner_known_from_score']:.1%} des rounds")
     print(f"Accord étiquette / score suivant     : {r['label_agreement_with_score']:.1%}")
@@ -177,8 +188,10 @@ def print_round_report(r: dict) -> None:
 # 5. Découpage train / test par match
 # --------------------------------------------------------------------------
 
-def make_split(d: pd.DataFrame, group_col: str = "match_id",
-               test_size: float = TEST_SIZE, seed: int = SEED) -> pd.Series:
+
+def make_split(
+    d: pd.DataFrame, group_col: str = "match_id", test_size: float = TEST_SIZE, seed: int = SEED
+) -> pd.Series:
     """Renvoie une colonne 'train' / 'test' : un groupe entier va d'un seul côté."""
     gss = GroupShuffleSplit(n_splits=1, test_size=test_size, random_state=seed)
     _, test_idx = next(gss.split(d, d[TARGET], groups=d[group_col]))
@@ -191,8 +204,10 @@ def make_split(d: pd.DataFrame, group_col: str = "match_id",
 # 6. Pipeline complet
 # --------------------------------------------------------------------------
 
+
 def build_processed_data(save: bool = True) -> pd.DataFrame:
-    """Données brutes -> lignes impossibles retirées -> rounds/matchs -> étiquettes corrigées -> split -> CSV."""
+    """Données brutes -> lignes impossibles retirées -> rounds/matchs -> étiquettes corrigées
+    -> découpage train/test -> CSV."""
     d = fix_labels(add_round_ids(drop_impossible_rows(load_data())))
     d["split"] = make_split(d)
     if save:
@@ -221,5 +236,7 @@ if __name__ == "__main__":
     print("Découpage par match :")
     for name in ["train", "test"]:
         part = data[data["split"] == name]
-        print(f"   {name:<5}: {counts[name]:>7,} lignes | {part['round_id'].nunique():>5,} rounds | "
-              f"{part['match_id'].nunique():>4,} matchs | victoires T {part[TARGET].mean():.1%}")
+        print(
+            f"   {name:<5}: {counts[name]:>7,} lignes | {part['round_id'].nunique():>5,} rounds | "
+            f"{part['match_id'].nunique():>4,} matchs | victoires T {part[TARGET].mean():.1%}"
+        )

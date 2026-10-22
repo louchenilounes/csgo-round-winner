@@ -2,9 +2,16 @@
 
 import numpy as np
 
-from src.train import load_model, save_model, train_final_model
-from src.tuning import (DEFAULT_PARAMS, load_best_params, make_lgbm, save_best_params,
-                        trials_table, tune_lightgbm)
+from src.serving import load_model
+from src.train import save_model, train_final_model
+from src.tuning import (
+    DEFAULT_PARAMS,
+    load_best_params,
+    make_lgbm,
+    save_best_params,
+    trials_table,
+    tune_lightgbm,
+)
 from tests.test_features import make_df
 
 

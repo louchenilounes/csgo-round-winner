@@ -1,5 +1,7 @@
 # CS:GO Round Winner – Prédiction du gagnant d'un round
 
+[![CI](https://github.com/louchenilounes/csgo-round-winner/actions/workflows/ci.yml/badge.svg)](https://github.com/louchenilounes/csgo-round-winner/actions/workflows/ci.yml)
+
 Prédire la probabilité de victoire d'une équipe (Terroristes ou Anti-terroristes) à partir de l'état d'un round de CS:GO : joueurs vivants, santé, armure, argent, armes, bombe posée, temps restant.
 
 > Projet en cours de développement.
@@ -19,7 +21,7 @@ Prédire la probabilité de victoire d'une équipe (Terroristes ou Anti-terroris
 | 8 | Interprétabilité (SHAP) | Terminé |
 | 9 | MLOps léger (MLflow) | Terminé |
 | 10 | Démo (FastAPI + Streamlit + Docker) | Terminé |
-| 11 | Qualité du code (tests, CI) | À faire |
+| 11 | Qualité du code (tests, CI) | Terminé |
 | 12 | Présentation finale | À faire |
 
 ## Structure du projet
@@ -61,7 +63,10 @@ csgo-round-winner/
 │   ├── tuning.py         # optimisation des hyperparamètres (Optuna)
 │   ├── leakage.py        # mesure de la fuite de données
 │   └── viz.py            # style et couleurs des graphiques
-├── tests/                # tests automatiques
+├── scripts/              # utilitaires (modèle synthétique pour la CI)
+├── tests/                # tests automatiques (pytest)
+├── .github/workflows/    # intégration continue (GitHub Actions)
+├── pyproject.toml        # configuration de ruff
 ├── Dockerfile
 ├── docker-compose.yml
 ├── requirements.txt      # environnement complet (analyse, entraînement, tests)
@@ -146,9 +151,12 @@ Les champs non renseignés prennent des valeurs cohérentes avec le nombre de jo
 docker compose up --build
 ```
 
-## Vérifier l'installation
+## Qualité du code
 
 ```bash
-python -m src.config
-python -m pytest
+python -m pytest                       # 61 tests
+ruff check src app tests scripts       # analyse statique
+ruff format --check src app tests scripts
 ```
+
+À chaque push, GitHub Actions lance l'analyse statique et les tests, puis construit l'image Docker, la démarre et interroge l'API. Le modèle réel n'étant pas versionné, la CI utilise un petit modèle entraîné sur des données synthétiques (`scripts/make_ci_model.py`) : elle vérifie le fonctionnement de la chaîne, pas la performance.

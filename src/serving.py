@@ -27,12 +27,27 @@ MODEL_PATH = MODELS_DIR / "lightgbm_pipeline.joblib"
 def load_model(path: Path = MODEL_PATH):
     return joblib.load(path)
 
+
 MAPS = ["de_dust2", "de_inferno", "de_mirage", "de_nuke", "de_overpass", "de_train", "de_vertigo", "de_cache"]
 
 # Arme représentative de chaque catégorie, par camp.
 REPRESENTATIVE = {
-    "ct": {"rifle": "m4a4", "awp": "awp", "other_sniper": "ssg08", "smg": "mp9", "heavy": "nova", "pistol": "usps"},
-    "t": {"rifle": "ak47", "awp": "awp", "other_sniper": "ssg08", "smg": "mac10", "heavy": "nova", "pistol": "glock"},
+    "ct": {
+        "rifle": "m4a4",
+        "awp": "awp",
+        "other_sniper": "ssg08",
+        "smg": "mp9",
+        "heavy": "nova",
+        "pistol": "usps",
+    },
+    "t": {
+        "rifle": "ak47",
+        "awp": "awp",
+        "other_sniper": "ssg08",
+        "smg": "mac10",
+        "heavy": "nova",
+        "pistol": "glock",
+    },
 }
 
 
@@ -81,8 +96,9 @@ class TeamState(BaseModel):
 class RoundState(BaseModel):
     """Situation de jeu à un instant du round."""
 
-    map: Literal["de_dust2", "de_inferno", "de_mirage", "de_nuke", "de_overpass",
-                 "de_train", "de_vertigo", "de_cache"] = "de_dust2"
+    map: Literal[
+        "de_dust2", "de_inferno", "de_mirage", "de_nuke", "de_overpass", "de_train", "de_vertigo", "de_cache"
+    ] = "de_dust2"
     time_left: float = Field(115, ge=0, le=175, description="secondes restantes")
     bomb_planted: bool = False
     ct_score: int = Field(0, ge=0, le=30)
@@ -101,19 +117,34 @@ class RoundState(BaseModel):
 def to_model_input(state: RoundState) -> pd.DataFrame:
     """Une ligne au format des données brutes (96 colonnes), prête pour le pipeline."""
     row = {
-        "time_left": state.time_left, "ct_score": state.ct_score, "t_score": state.t_score,
-        "map": state.map, "bomb_planted": state.bomb_planted, "ct_defuse_kits": state.ct_defuse_kits,
+        "time_left": state.time_left,
+        "ct_score": state.ct_score,
+        "t_score": state.t_score,
+        "map": state.map,
+        "bomb_planted": state.bomb_planted,
+        "ct_defuse_kits": state.ct_defuse_kits,
     }
     for side, team in (("ct", state.ct), ("t", state.t)):
-        row.update({
-            f"{side}_health": team.health, f"{side}_armor": team.armor, f"{side}_money": team.money,
-            f"{side}_helmets": team.helmets, f"{side}_players_alive": team.players_alive,
-        })
-        for group, weapons in WEAPON_GROUPS.items():
+        row.update(
+            {
+                f"{side}_health": team.health,
+                f"{side}_armor": team.armor,
+                f"{side}_money": team.money,
+                f"{side}_helmets": team.helmets,
+                f"{side}_players_alive": team.players_alive,
+            }
+        )
+        for weapons in WEAPON_GROUPS.values():
             for w in weapons:
                 row[f"{side}_weapon_{w}"] = 0.0
-        counts = {"rifle": team.rifles, "awp": team.awp, "other_sniper": team.other_snipers,
-                  "smg": team.smgs, "heavy": team.heavy, "pistol": team.pistols}
+        counts = {
+            "rifle": team.rifles,
+            "awp": team.awp,
+            "other_sniper": team.other_snipers,
+            "smg": team.smgs,
+            "heavy": team.heavy,
+            "pistol": team.pistols,
+        }
         for group, n in counts.items():
             row[f"{side}_weapon_{REPRESENTATIVE[side][group]}"] = float(n)
         for g in GRENADES:
@@ -130,8 +161,11 @@ def predict(model, state: RoundState, top: int = 5) -> dict:
     X = to_model_input(state)
     proba_t = float(model.predict_proba(X)[0, 1])
     table = explain_row(model, X, top=top)
-    factors = [{"variable": str(v), "contribution": round(float(c), 4)}
-               for v, c in zip(table["variable"], table["contribution"]) if "autres" not in str(v)]
+    factors = [
+        {"variable": str(v), "contribution": round(float(c), 4)}
+        for v, c in zip(table["variable"], table["contribution"])
+        if "autres" not in str(v)
+    ]
     return {
         "proba_t_win": round(proba_t, 4),
         "proba_ct_win": round(1 - proba_t, 4),

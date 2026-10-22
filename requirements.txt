@@ -28,5 +28,6 @@ seaborn>=0.13
 # Notebooks
 jupyter
 
-# Tests
+# Tests et qualité du code
 pytest>=7.0
+ruff>=0.6

@@ -40,10 +40,23 @@ BOOLEAN_COLUMNS = ["bomb_planted"]
 
 # Quelques colonnes indispensables : si l'une manque, le fichier n'est pas le bon.
 KEY_COLUMNS = [
-    "time_left", "ct_score", "t_score", "map", "bomb_planted",
-    "ct_health", "t_health", "ct_armor", "t_armor", "ct_money", "t_money",
-    "ct_helmets", "t_helmets", "ct_defuse_kits",
-    "ct_players_alive", "t_players_alive", "round_winner",
+    "time_left",
+    "ct_score",
+    "t_score",
+    "map",
+    "bomb_planted",
+    "ct_health",
+    "t_health",
+    "ct_armor",
+    "t_armor",
+    "ct_money",
+    "t_money",
+    "ct_helmets",
+    "t_helmets",
+    "ct_defuse_kits",
+    "ct_players_alive",
+    "t_players_alive",
+    "round_winner",
 ]
 
 
@@ -51,8 +64,8 @@ KEY_COLUMNS = [
 # 1. Téléchargement
 # --------------------------------------------------------------------------
 
-def download_raw_data(url: str = OPENML_URL, path: Path = RAW_ARFF_PATH,
-                      force: bool = False) -> Path:
+
+def download_raw_data(url: str = OPENML_URL, path: Path = RAW_ARFF_PATH, force: bool = False) -> Path:
     """Télécharge le fichier ARFF depuis OpenML et le sauvegarde dans data/raw/.
 
     Si le fichier existe déjà, on ne le retélécharge pas (sauf si force=True).
@@ -81,12 +94,13 @@ def download_raw_data(url: str = OPENML_URL, path: Path = RAW_ARFF_PATH,
 # 2. Lecture du fichier ARFF
 # --------------------------------------------------------------------------
 
+
 def _parse_attribute_name(line: str) -> str:
     """Extrait le nom de colonne d'une ligne « @ATTRIBUTE nom type ».
 
     Gère aussi les noms entre guillemets, par exemple : @ATTRIBUTE 'time_left' NUMERIC
     """
-    rest = line.strip()[len("@attribute"):].strip()
+    rest = line.strip()[len("@attribute") :].strip()
     if rest and rest[0] in "'\"":
         quote = rest[0]
         end = rest.index(quote, 1)
@@ -103,7 +117,7 @@ def read_arff(path: Path) -> pd.DataFrame:
     Les valeurs manquantes sont écrites « ? ».
     """
     path = Path(path)
-    with open(path, "r", encoding="utf-8") as f:
+    with open(path, encoding="utf-8") as f:
         lines = f.read().splitlines()
 
     columns: list[str] = []
@@ -120,7 +134,7 @@ def read_arff(path: Path) -> pd.DataFrame:
         raise ValueError(f"{path.name} ne ressemble pas à un fichier ARFF (pas de @ATTRIBUTE ou @DATA).")
 
     # On garde seulement les vraies lignes de données (ni vides, ni commentaires « % »).
-    data_lines = [l for l in lines[data_start:] if l.strip() and not l.lstrip().startswith("%")]
+    data_lines = [line for line in lines[data_start:] if line.strip() and not line.lstrip().startswith("%")]
 
     df = pd.read_csv(
         io.StringIO("\n".join(data_lines)),
@@ -136,6 +150,7 @@ def read_arff(path: Path) -> pd.DataFrame:
 # --------------------------------------------------------------------------
 # 3. Types et cible
 # --------------------------------------------------------------------------
+
 
 def _to_bool(series: pd.Series) -> pd.Series:
     """Convertit 'True'/'False' (texte), True/False ou 1/0 en vrais booléens."""
@@ -177,6 +192,7 @@ def clean_types(df: pd.DataFrame) -> pd.DataFrame:
 # 4. Chargement complet (point d'entrée principal)
 # --------------------------------------------------------------------------
 
+
 def build_raw_csv(arff_path: Path = RAW_ARFF_PATH, csv_path: Path = RAW_DATA_PATH) -> pd.DataFrame:
     """ARFF -> DataFrame typé -> CSV propre. Renvoie le DataFrame."""
     df = clean_types(read_arff(arff_path))
@@ -196,7 +212,9 @@ def load_data(csv_path: Path = RAW_DATA_PATH, download: bool = True) -> pd.DataF
     if not csv_path.exists():
         if not RAW_ARFF_PATH.exists():
             if not download:
-                raise FileNotFoundError(f"Ni {csv_path.name} ni {RAW_ARFF_PATH.name} n'existent dans data/raw/.")
+                raise FileNotFoundError(
+                    f"Ni {csv_path.name} ni {RAW_ARFF_PATH.name} n'existent dans data/raw/."
+                )
             download_raw_data()
         return build_raw_csv(RAW_ARFF_PATH, csv_path)
 
@@ -212,6 +230,7 @@ def load_data(csv_path: Path = RAW_DATA_PATH, download: bool = True) -> pd.DataF
 # --------------------------------------------------------------------------
 # 5. Vérifications de qualité
 # --------------------------------------------------------------------------
+
 
 def check_data(df: pd.DataFrame) -> dict:
     """Calcule un petit rapport de qualité et le renvoie sous forme de dictionnaire."""
@@ -236,15 +255,32 @@ def check_data(df: pd.DataFrame) -> dict:
 
 def print_report(report: dict) -> None:
     """Affiche le rapport de check_data de façon lisible."""
-    ok = lambda cond: "OK " if cond else "!! "
+
+    def ok(cond: bool) -> str:
+        return "OK " if cond else "!! "
+
     print("\n========== Rapport de qualité des données ==========")
-    print(f"{ok(report['n_rows'] == EXPECTED_N_ROWS)}Lignes            : {report['n_rows']:,} (attendu {EXPECTED_N_ROWS:,})")
-    print(f"{ok(report['n_columns'] == EXPECTED_N_COLUMNS + 1)}Colonnes          : {report['n_columns']} (attendu {EXPECTED_N_COLUMNS + 1}, t_win compris)")
-    print(f"{ok(not report['missing_columns'])}Colonnes clés     : {'toutes présentes' if not report['missing_columns'] else report['missing_columns']}")
-    print(f"{ok(report['n_missing_values'] == 0)}Valeurs manquantes: {report['n_missing_values']}"
-          + (f" dans {report['columns_with_missing']}" if report['columns_with_missing'] else ""))
-    print(f"   Lignes en double  : {report['n_duplicated_rows']:,} "
-          f"({report['n_duplicated_rows'] / report['n_rows']:.1%}) -> conservées (voir la reconstruction des rounds)")
+    print(
+        f"{ok(report['n_rows'] == EXPECTED_N_ROWS)}Lignes            : "
+        f"{report['n_rows']:,} (attendu {EXPECTED_N_ROWS:,})"
+    )
+    print(
+        f"{ok(report['n_columns'] == EXPECTED_N_COLUMNS + 1)}Colonnes          : "
+        f"{report['n_columns']} (attendu {EXPECTED_N_COLUMNS + 1}, t_win compris)"
+    )
+    print(
+        f"{ok(not report['missing_columns'])}Colonnes clés     : "
+        f"{report['missing_columns'] or 'toutes présentes'}"
+    )
+    print(
+        f"{ok(report['n_missing_values'] == 0)}Valeurs manquantes: {report['n_missing_values']}"
+        + (f" dans {report['columns_with_missing']}" if report["columns_with_missing"] else "")
+    )
+    print(
+        f"   Lignes en double  : {report['n_duplicated_rows']:,} "
+        f"({report['n_duplicated_rows'] / report['n_rows']:.1%}) "
+        "-> conservées (voir la reconstruction des rounds)"
+    )
     print(f"   Victoires T       : {report['share_t_win']:.1%}")
     print(f"   Victoires CT      : {report['share_ct_win']:.1%}")
     print(f"   Cartes            : {report['n_maps']} -> {', '.join(report['maps'])}")

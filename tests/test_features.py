@@ -6,30 +6,68 @@ import pytest
 from sklearn.linear_model import LogisticRegression
 
 from src.evaluation import compute_metrics, grouped_cv, summarize_cv
-from src.features import (GRENADES, WEAPON_GROUPS, FeatureBuilder, build_pipeline,
-                          build_raw_pipeline)
+from src.features import GRENADES, WEAPON_GROUPS, FeatureBuilder, build_pipeline, build_raw_pipeline
 
-ALL_WEAPONS = ["ak47", "aug", "awp", "bizon", "cz75auto", "deagle", "elite", "famas", "fiveseven",
-               "g3sg1", "galilar", "glock", "m249", "m4a1s", "m4a4", "mac10", "mag7", "mp5sd", "mp7",
-               "mp9", "negev", "nova", "p2000", "p250", "p90", "r8revolver", "sawedoff", "scar20",
-               "sg553", "ssg08", "tec9", "ump45", "usps", "xm1014"]
+ALL_WEAPONS = [
+    "ak47",
+    "aug",
+    "awp",
+    "bizon",
+    "cz75auto",
+    "deagle",
+    "elite",
+    "famas",
+    "fiveseven",
+    "g3sg1",
+    "galilar",
+    "glock",
+    "m249",
+    "m4a1s",
+    "m4a4",
+    "mac10",
+    "mag7",
+    "mp5sd",
+    "mp7",
+    "mp9",
+    "negev",
+    "nova",
+    "p2000",
+    "p250",
+    "p90",
+    "r8revolver",
+    "sawedoff",
+    "scar20",
+    "sg553",
+    "ssg08",
+    "tec9",
+    "ump45",
+    "usps",
+    "xm1014",
+]
 
 
 def make_df(n=40, seed=0):
     rng = np.random.default_rng(seed)
-    df = pd.DataFrame({
-        "time_left": rng.uniform(0, 175, n), "ct_score": rng.integers(0, 15, n).astype(float),
-        "t_score": rng.integers(0, 15, n).astype(float),
-        "map": pd.Categorical(rng.choice(["de_dust2", "de_nuke", "de_inferno"], n)),
-        "bomb_planted": pd.array(rng.random(n) < 0.3, dtype="boolean"),
-        "ct_health": rng.uniform(0, 500, n), "t_health": rng.uniform(0, 500, n),
-        "ct_armor": rng.uniform(0, 500, n), "t_armor": rng.uniform(0, 500, n),
-        "ct_money": rng.uniform(0, 30000, n), "t_money": rng.uniform(0, 30000, n),
-        "ct_helmets": rng.integers(0, 6, n).astype(float), "t_helmets": rng.integers(0, 6, n).astype(float),
-        "ct_defuse_kits": rng.integers(0, 6, n).astype(float),
-        "ct_players_alive": rng.integers(0, 6, n).astype(float),
-        "t_players_alive": rng.integers(0, 6, n).astype(float),
-    })
+    df = pd.DataFrame(
+        {
+            "time_left": rng.uniform(0, 175, n),
+            "ct_score": rng.integers(0, 15, n).astype(float),
+            "t_score": rng.integers(0, 15, n).astype(float),
+            "map": pd.Categorical(rng.choice(["de_dust2", "de_nuke", "de_inferno"], n)),
+            "bomb_planted": pd.array(rng.random(n) < 0.3, dtype="boolean"),
+            "ct_health": rng.uniform(0, 500, n),
+            "t_health": rng.uniform(0, 500, n),
+            "ct_armor": rng.uniform(0, 500, n),
+            "t_armor": rng.uniform(0, 500, n),
+            "ct_money": rng.uniform(0, 30000, n),
+            "t_money": rng.uniform(0, 30000, n),
+            "ct_helmets": rng.integers(0, 6, n).astype(float),
+            "t_helmets": rng.integers(0, 6, n).astype(float),
+            "ct_defuse_kits": rng.integers(0, 6, n).astype(float),
+            "ct_players_alive": rng.integers(0, 6, n).astype(float),
+            "t_players_alive": rng.integers(0, 6, n).astype(float),
+        }
+    )
     for side in ("ct", "t"):
         for w in ALL_WEAPONS:
             df[f"{side}_weapon_{w}"] = rng.integers(0, 2, n).astype(float)

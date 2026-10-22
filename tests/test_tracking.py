@@ -2,7 +2,6 @@
 
 import mlflow
 import numpy as np
-import pandas as pd
 import pytest
 
 from src.evaluation import grouped_cv

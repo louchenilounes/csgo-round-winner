@@ -39,18 +39,22 @@ def test_defaults_follow_players_alive():
     assert team.rifles == 1 and team.pistols == 2
 
 
-@pytest.mark.parametrize("kwargs", [
-    {"t": {"players_alive": 2, "health": 300}},   # santé > 100 par joueur
-    {"bomb_planted": True, "time_left": 90},      # bombe posée avec plus de 40 s
-    {"ct": {"players_alive": 1, "rifles": 3, "health": 100, "armor": 100}},  # 3 fusils pour 1 joueur
-])
+@pytest.mark.parametrize(
+    "kwargs",
+    [
+        {"t": {"players_alive": 2, "health": 300}},  # santé > 100 par joueur
+        {"bomb_planted": True, "time_left": 90},  # bombe posée avec plus de 40 s
+        {"ct": {"players_alive": 1, "rifles": 3, "health": 100, "armor": 100}},  # 3 fusils pour 1 joueur
+    ],
+)
 def test_invalid_states_are_rejected(kwargs):
     with pytest.raises(ValidationError):
         RoundState(**kwargs)
 
 
 def test_predict_output(model_path):
-    from src.train import load_model
+    from src.serving import load_model
+
     out = predict(load_model(model_path), RoundState())
     assert out["proba_t_win"] + out["proba_ct_win"] == pytest.approx(1)
     assert out["favori"] in {"T", "CT"}
@@ -60,6 +64,7 @@ def test_predict_output(model_path):
 def test_api(model_path, monkeypatch):
     monkeypatch.setenv("MODEL_PATH", str(model_path))
     from app.api import app
+
     with TestClient(app) as client:
         assert client.get("/health").json() == {"status": "ok", "model_loaded": True}
         r = client.post("/predict", json={"map": "de_nuke", "time_left": 30, "bomb_planted": True})

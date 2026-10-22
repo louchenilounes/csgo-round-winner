@@ -41,8 +41,14 @@ def mini_arff(tmp_path):
 def test_read_arff_columns_and_rows(mini_arff):
     df = read_arff(mini_arff)
     assert list(df.columns) == [
-        "time_left", "ct_score", "t_score", "map", "bomb_planted",
-        "ct_health", "t_health", "round_winner",
+        "time_left",
+        "ct_score",
+        "t_score",
+        "map",
+        "bomb_planted",
+        "ct_health",
+        "t_health",
+        "round_winner",
     ]
     assert len(df) == 5  # les commentaires et lignes vides sont ignorés
 

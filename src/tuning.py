@@ -52,8 +52,9 @@ def suggest_params(trial: optuna.Trial) -> dict:
     }
 
 
-def tune_lightgbm(train: pd.DataFrame, n_trials: int = 30, n_folds: int = 5,
-                  seed: int = SEED, show_progress: bool = True) -> optuna.Study:
+def tune_lightgbm(
+    train: pd.DataFrame, n_trials: int = 30, n_folds: int = 5, seed: int = SEED, show_progress: bool = True
+) -> optuna.Study:
     """Lance la recherche et renvoie l'étude Optuna (tous les essais y sont conservés)."""
 
     def objective(trial: optuna.Trial) -> float:
@@ -65,9 +66,9 @@ def tune_lightgbm(train: pd.DataFrame, n_trials: int = 30, n_folds: int = 5,
         return float(folds["log_loss"].mean())
 
     optuna.logging.set_verbosity(optuna.logging.WARNING)
-    study = optuna.create_study(direction="minimize",
-                                sampler=optuna.samplers.TPESampler(seed=seed),
-                                study_name="lightgbm_log_loss")
+    study = optuna.create_study(
+        direction="minimize", sampler=optuna.samplers.TPESampler(seed=seed), study_name="lightgbm_log_loss"
+    )
     study.enqueue_trial(DEFAULT_PARAMS)  # le 1er essai = réglages par défaut, pour comparaison
     study.optimize(objective, n_trials=n_trials, show_progress_bar=show_progress)
     return study
