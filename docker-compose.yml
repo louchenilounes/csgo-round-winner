@@ -1,0 +1,13 @@
+# Lance l'API et l'interface avec la même image :
+#   docker compose up --build
+# API : http://localhost:8000/docs   Interface : http://localhost:8501
+services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+  app:
+    build: .
+    command: ["streamlit", "run", "app/streamlit_app.py", "--server.address=0.0.0.0", "--server.port=8501"]
+    ports:
+      - "8501:8501"

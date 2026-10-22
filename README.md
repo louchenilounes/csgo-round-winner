@@ -18,7 +18,7 @@ Prédire la probabilité de victoire d'une équipe (Terroristes ou Anti-terroris
 | 7 | Évaluation complète | Terminé |
 | 8 | Interprétabilité (SHAP) | Terminé |
 | 9 | MLOps léger (MLflow) | Terminé |
-| 10 | Démo (FastAPI + Streamlit + Docker) | À faire |
+| 10 | Démo (FastAPI + Streamlit + Docker) | Terminé |
 | 11 | Qualité du code (tests, CI) | À faire |
 | 12 | Présentation finale | À faire |
 
@@ -26,7 +26,9 @@ Prédire la probabilité de victoire d'une équipe (Terroristes ou Anti-terroris
 
 ```
 csgo-round-winner/
-├── app/                  # API et démo
+├── app/
+│   ├── api.py            # API FastAPI (/health, /predict)
+│   └── streamlit_app.py  # interface Streamlit
 ├── data/
 │   ├── raw/              # données brutes (non versionnées)
 │   └── processed/        # données nettoyées (non versionnées)
@@ -53,13 +55,17 @@ csgo-round-winner/
 │   ├── features.py       # création des variables et pipelines scikit-learn
 │   ├── final_eval.py     # bootstrap par match, calibration
 │   ├── rounds.py         # reconstruction des rounds/matchs, split train/test
+│   ├── serving.py        # situation de jeu -> entrée du modèle, prédiction expliquée
 │   ├── train.py          # entraînement et sauvegarde du modèle final
 │   ├── tracking.py       # suivi MLflow (runs, Model Registry)
 │   ├── tuning.py         # optimisation des hyperparamètres (Optuna)
 │   ├── leakage.py        # mesure de la fuite de données
 │   └── viz.py            # style et couleurs des graphiques
 ├── tests/                # tests automatiques
-├── requirements.txt
+├── Dockerfile
+├── docker-compose.yml
+├── requirements.txt      # environnement complet (analyse, entraînement, tests)
+├── requirements-app.txt  # dépendances minimales de l'image Docker
 └── README.md
 ```
 
@@ -109,6 +115,36 @@ mlflow ui --backend-store-uri sqlite:///mlflow.db
 ```
 
 puis ouvrir http://127.0.0.1:5000.
+
+## Démo
+
+Le modèle doit d'abord être entraîné (`python -m src.train`, ou `python -m src.experiments`).
+
+**Interface Streamlit** : on règle une situation de jeu (carte, chrono, bombe, joueurs vivants, équipement de chaque équipe) et l'application affiche la probabilité de victoire avec les facteurs qui l'expliquent (valeurs SHAP).
+
+```bash
+streamlit run app/streamlit_app.py
+```
+
+**API FastAPI** (documentation interactive sur http://127.0.0.1:8000/docs) :
+
+```bash
+uvicorn app.api:app --reload
+```
+
+```bash
+curl -X POST http://127.0.0.1:8000/predict -H "Content-Type: application/json" \
+     -d '{"map": "de_inferno", "time_left": 25, "bomb_planted": true,
+          "ct": {"players_alive": 2}, "t": {"players_alive": 3}}'
+```
+
+Les champs non renseignés prennent des valeurs cohérentes avec le nombre de joueurs vivants ; les situations impossibles (santé supérieure à 100 par joueur, bombe posée avec plus de 40 s…) sont refusées avec un message explicite (code 422).
+
+**Docker** (API sur le port 8000, interface sur le port 8501) :
+
+```bash
+docker compose up --build
+```
 
 ## Vérifier l'installation
 

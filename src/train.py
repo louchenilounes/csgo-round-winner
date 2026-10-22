@@ -20,9 +20,9 @@ from sklearn.pipeline import Pipeline
 from src.config import MODELS_DIR, TARGET
 from src.features import build_pipeline
 from src.rounds import load_processed
+from src.serving import MODEL_PATH, load_model  # chemin et chargement définis dans serving.py
 from src.tuning import BEST_PARAMS_PATH, load_best_params, make_lgbm
 
-MODEL_PATH = MODELS_DIR / "lightgbm_pipeline.joblib"
 MODEL_INFO_PATH = MODELS_DIR / "lightgbm_pipeline.json"
 
 
@@ -40,10 +40,6 @@ def save_model(pipeline: Pipeline, params: dict, n_rows: int,
             "features": list(pipeline.named_steps["prep"].get_feature_names_out())}
     info_path.write_text(json.dumps(info, indent=2), encoding="utf-8")
     return path
-
-
-def load_model(path: Path = MODEL_PATH) -> Pipeline:
-    return joblib.load(path)
 
 
 if __name__ == "__main__":
